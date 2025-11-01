@@ -43,7 +43,7 @@ export default function CreatePost() {
             value={postBody}
             onChange={(e) => setPostBody(e.target.value)}
             placeholder="What's on your mind?"
-            className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
             rows={3}
             required
             disabled={loading}
