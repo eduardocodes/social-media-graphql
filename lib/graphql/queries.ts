@@ -29,6 +29,35 @@ export const GET_POSTS = gql`
   }
 `;
 
+export const GET_POST = gql`
+  query GetPost($postId: ID!) {
+    getPost(postId: $postId) {
+      id
+      body
+      username
+      createdAt
+      likeCount
+      commentCount
+      user {
+        id
+        username
+        email
+      }
+      likes {
+        id
+        username
+        createdAt
+      }
+      comments {
+        id
+        body
+        username
+        createdAt
+      }
+    }
+  }
+`;
+
 export const CREATE_POST = gql`
   mutation CreatePost($body: String!) {
     createPost(body: $body) {

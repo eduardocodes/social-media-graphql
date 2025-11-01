@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { GET_POSTS } from '../lib/graphql/queries';
+import PostView from './PostView';
 
 interface Post {
   id: string;
@@ -29,6 +31,7 @@ interface Post {
 }
 
 export default function PostsFeed() {
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const { data, loading, error } = useQuery(GET_POSTS);
 
   if (loading) return <div className="text-center py-4">Loading posts...</div>;
@@ -77,7 +80,11 @@ export default function PostsFeed() {
   return (
     <>
       {posts.map((post) => (
-        <div key={post.id} className="bg-white rounded-lg border border-gray-200 p-4 h-fit">
+        <div 
+          key={post.id} 
+          className="bg-white rounded-lg border border-gray-200 p-4 h-fit cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => setSelectedPostId(post.id)}
+        >
           <div className="flex items-center space-x-3 mb-3">
             <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
               <span className="text-gray-600 text-sm font-medium">
@@ -104,6 +111,13 @@ export default function PostsFeed() {
           </div>
         </div>
       ))}
+      
+      {selectedPostId && (
+        <PostView 
+          postId={selectedPostId} 
+          onClose={() => setSelectedPostId(null)} 
+        />
+      )}
     </>
   );
 }
