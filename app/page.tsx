@@ -1,10 +1,9 @@
 'use client';
 
-import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs';
+import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
+import Dashboard from '../components/Dashboard';
 
 export default function Home() {
-  const { user } = useUser();
-
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="max-w-4xl mx-auto px-6 py-12">
@@ -35,51 +34,7 @@ export default function Home() {
         </SignedOut>
 
         <SignedIn>
-          {/* Content for signed-in users */}
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Welcome back, {user?.firstName || 'there'}! 👋
-            </h1>
-            <p className="text-xl text-gray-600 mb-8">
-              You're successfully authenticated with Clerk. Ready to build something amazing?
-            </p>
-            
-            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  🚀 Next Steps
-                </h3>
-                <ul className="text-left text-gray-600 space-y-2">
-                  <li>• Set up GraphQL API endpoints</li>
-                  <li>• Configure Apollo Client</li>
-                  <li>• Design your data models</li>
-                  <li>• Build real-time subscriptions</li>
-                </ul>
-              </div>
-              
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  🔐 Authentication Ready
-                </h3>
-                <ul className="text-left text-gray-600 space-y-2">
-                  <li>• User authentication ✅</li>
-                  <li>• Protected routes ✅</li>
-                  <li>• User management ✅</li>
-                  <li>• Session handling ✅</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-2">
-                🎉 Clerk Integration Complete!
-              </h3>
-              <p className="text-blue-700">
-                Your social media platform now has secure authentication powered by Clerk. 
-                Users can sign in, manage their profiles, and access protected features seamlessly.
-              </p>
-            </div>
-          </div>
+          <Dashboard />
         </SignedIn>
       </main>
     </div>

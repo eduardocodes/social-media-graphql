@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import ApolloWrapper from '../components/ApolloProvider';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,6 +29,7 @@ export default function RootLayout({
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          suppressHydrationWarning={true}
         >
           <header className="bg-white border-b border-gray-200 px-6 py-4">
             <div className="max-w-6xl mx-auto flex justify-between items-center">
@@ -52,7 +54,9 @@ export default function RootLayout({
               </div>
             </div>
           </header>
-          {children}
+          <ApolloWrapper>
+            {children}
+          </ApolloWrapper>
         </body>
       </html>
     </ClerkProvider>
