@@ -60,7 +60,7 @@ export default function CreatePost() {
           <button
             type="submit"
             disabled={!postBody.trim() || loading}
-            className="px-6 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
           >
             {loading ? 'Posting...' : 'Post!'}
           </button>
