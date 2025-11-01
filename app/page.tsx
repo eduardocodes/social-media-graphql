@@ -1,6 +1,6 @@
 'use client';
 
-import { SignedIn, SignedOut } from '@clerk/nextjs';
+import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 import Dashboard from '../components/Dashboard';
 
 export default function Home() {
@@ -75,12 +75,14 @@ export default function Home() {
               <p className="text-xl opacity-90 mb-6">
                 Explore the interactive features and see modern web development in action.
               </p>
-              <button className="inline-flex items-center space-x-2 text-lg font-medium bg-white text-gray-800 px-6 py-3 rounded-lg hover:scale-105 hover:shadow-lg transition-all duration-200 cursor-pointer">
-                <span>Sign in to get started</span>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </button>
+              <SignInButton mode="modal">
+                <button className="inline-flex items-center space-x-2 text-lg font-medium bg-white text-gray-800 px-6 py-3 rounded-lg hover:scale-105 hover:shadow-lg transition-all duration-200 cursor-pointer">
+                  <span>Sign in to get started</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </button>
+              </SignInButton>
             </div>
           </div>
         </SignedOut>
