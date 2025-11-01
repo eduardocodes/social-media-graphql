@@ -24,17 +24,20 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">Posts Recents</h2>
-          
-          {/* Create Post Section */}
-          <div className="mb-8">
+        {/* 2-Column Flex Layout */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Left Column: Create Post */}
+          <div className="lg:w-1/3">
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Create Post</h2>
             <CreatePost />
           </div>
           
-          {/* Posts Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <PostsFeed />
+          {/* Right Column: Posts Feed */}
+          <div className="lg:w-2/3">
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Recent Posts</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <PostsFeed />
+            </div>
           </div>
         </div>
       </main>
