@@ -32,9 +32,13 @@ interface Post {
   }>;
 }
 
+interface GetPostsData {
+  getPosts: Post[];
+}
+
 export default function PostsFeed() {
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
-  const { data, loading, error } = useQuery(GET_POSTS);
+  const { data, loading, error } = useQuery<GetPostsData>(GET_POSTS);
 
   if (loading) return (
     <div className="text-center py-4 flex items-center justify-center">
@@ -44,44 +48,6 @@ export default function PostsFeed() {
   if (error) return <div className="text-center py-4 text-red-500">Error loading posts: {error.message}</div>;
 
   const posts: Post[] = data?.getPosts || [];
-
-  const formatDate = (dateString: any) => {
-    if (!dateString) return 'data inválida';
-
-    // Handle numeric timestamps or Date objects gracefully
-    let date: Date;
-    if (dateString instanceof Date) {
-      date = dateString;
-    } else if (typeof dateString === 'number' || /^\d+$/.test(dateString)) {
-      date = new Date(parseInt(dateString as string, 10));
-    } else if (typeof dateString === 'string') {
-      // Replace potential trailing "Z" issues or use the raw string
-      date = new Date(dateString);
-    } else {
-      return 'data inválida';
-    }
-
-    if (isNaN(date.getTime())) return 'data inválida';
-    
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-    const minutes = Math.floor(diffInSeconds / 60);
-    if (minutes < 1) return 'just now';
-    if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-
-    const days = Math.floor(hours / 24);
-    if (days < 30) return `${days} day${days > 1 ? 's' : ''} ago`;
-
-    const months = Math.floor(days / 30);
-    if (months < 12) return `${months} month${months > 1 ? 's' : ''} ago`;
-
-    const years = Math.floor(months / 12);
-    return `${years} year${years > 1 ? 's' : ''} ago`;
-  };
 
   return (
     <>
