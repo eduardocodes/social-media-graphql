@@ -137,10 +137,10 @@ export default function PostView({ postId, onClose }: PostViewProps) {
 
   return (
     <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
-      <div className="bg-white rounded-lg shadow-2xl p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white rounded-lg shadow-2xl p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto relative" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Post</h2>
+          <h2 className="text-xl font-semibold text-black">Post</h2>
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl cursor-pointer"
@@ -179,7 +179,7 @@ export default function PostView({ postId, onClose }: PostViewProps) {
 
         {/* Comments Section */}
         <div className="border-t pt-4">
-          <h3 className="font-semibold mb-4">Comments</h3>
+          <h3 className="font-semibold mb-4 text-black">Comments</h3>
           
           {/* Comments List */}
           <div className="space-y-3 mb-4 max-h-60 overflow-y-auto">
