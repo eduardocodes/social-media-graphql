@@ -57,22 +57,21 @@ export default function PostsFeed() {
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-
     const minutes = Math.floor(diffInSeconds / 60);
-    if (minutes < 1) return 'agora mesmo';
-    if (minutes < 60) return `há ${minutes} minuto${minutes > 1 ? 's' : ''}`;
+    if (minutes < 1) return 'just now';
+    if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
 
     const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `há ${hours} hora${hours > 1 ? 's' : ''}`;
+    if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
 
     const days = Math.floor(hours / 24);
-    if (days < 30) return `há ${days} dia${days > 1 ? 's' : ''}`;
+    if (days < 30) return `${days} day${days > 1 ? 's' : ''} ago`;
 
     const months = Math.floor(days / 30);
-    if (months < 12) return `há ${months} mês${months > 1 ? 'es' : ''}`;
+    if (months < 12) return `${months} month${months > 1 ? 's' : ''} ago`;
 
     const years = Math.floor(months / 12);
-    return `há ${years} ano${years > 1 ? 's' : ''}`;
+    return `${years} year${years > 1 ? 's' : ''} ago`;
   };
 
   return (
@@ -100,7 +99,7 @@ export default function PostsFeed() {
             </button>
             <button className="flex items-center space-x-1 hover:text-blue-500">
               <span>💬</span>
-              <span>{post.commentCount} Comentários</span>
+              <span>{post.commentCount} Comments</span>
             </button>
           </div>
         </div>

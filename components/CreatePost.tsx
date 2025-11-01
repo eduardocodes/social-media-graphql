@@ -36,13 +36,13 @@ export default function CreatePost() {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="post-body" className="block text-sm font-medium text-gray-700 mb-2">
-            Criar um Post
+            Create a Post
           </label>
           <textarea
             id="post-body"
             value={postBody}
             onChange={(e) => setPostBody(e.target.value)}
-            placeholder="O que você está pensando?"
+            placeholder="What's on your mind?"
             className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             rows={3}
             required
@@ -52,7 +52,7 @@ export default function CreatePost() {
         
         {error && (
           <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-            Erro ao criar post: {error.message}
+            Error creating post: {error.message}
           </div>
         )}
         
@@ -62,7 +62,7 @@ export default function CreatePost() {
             disabled={!postBody.trim() || loading}
             className="px-6 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
           >
-            {loading ? 'Postando...' : 'Postar!'}
+            {loading ? 'Posting...' : 'Post!'}
           </button>
         </div>
       </form>
