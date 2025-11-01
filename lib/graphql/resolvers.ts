@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import User from '../../models/User';
 import Post from '../../models/Post';
 import connectDB from '../mongodb';
+import { pubsub, SUBSCRIPTION_EVENTS } from '../pubsub';
 
 interface Context {
   req: any;
@@ -130,7 +131,14 @@ export const resolvers = {
         });
 
         const post = await newPost.save();
-        return await Post.findById(post._id).populate('user');
+        const populatedPost = await Post.findById(post._id).populate('user');
+        
+        // Publish the new post to subscribers
+        pubsub.publish(SUBSCRIPTION_EVENTS.POST_ADDED, {
+          newPost: populatedPost
+        });
+        
+        return populatedPost;
       } catch (err: any) {
         throw new Error(err.message || 'Error creating post');
       }
@@ -167,6 +175,12 @@ export const resolvers = {
         }
 
         await Post.findByIdAndDelete(postId);
+        
+        // Publish the post deletion to subscribers
+        pubsub.publish(SUBSCRIPTION_EVENTS.POST_DELETED, {
+          postDeleted: postId
+        });
+        
         return 'Post deleted successfully';
       } catch (err: any) {
         throw new Error(err.message || 'Error deleting post');
@@ -203,7 +217,14 @@ export const resolvers = {
         } as any);
 
         await post.save();
-        return await Post.findById(postId).populate('user');
+        const updatedPost = await Post.findById(postId).populate('user');
+        
+        // Publish the comment addition to subscribers
+        pubsub.publish(SUBSCRIPTION_EVENTS.COMMENT_ADDED, {
+          commentAdded: updatedPost
+        });
+        
+        return updatedPost;
       } catch (err: any) {
         throw new Error(err.message || 'Error creating comment');
       }
@@ -290,10 +311,23 @@ export const resolvers = {
         }
 
         await post.save();
-        return await Post.findById(postId).populate('user');
+        const updatedPost = await Post.findById(postId).populate('user');
+        
+        // Publish the post like/unlike to subscribers
+        pubsub.publish(SUBSCRIPTION_EVENTS.POST_LIKED, {
+          postLiked: updatedPost
+        });
+        
+        return updatedPost;
       } catch (err: any) {
         throw new Error(err.message || 'Error liking post');
       }
+    }
+  },
+
+  Subscription: {
+    newPost: {
+      subscribe: () => pubsub.asyncIterableIterator([SUBSCRIPTION_EVENTS.POST_ADDED])
     }
   }
 };

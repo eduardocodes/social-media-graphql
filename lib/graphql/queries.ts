@@ -75,3 +75,32 @@ export const CREATE_COMMENT = gql`
     }
   }
 `;
+
+export const NEW_POST_SUBSCRIPTION = gql`
+  subscription NewPost {
+    newPost {
+      id
+      body
+      username
+      createdAt
+      likeCount
+      commentCount
+      user {
+        id
+        username
+        email
+      }
+      likes {
+        id
+        username
+        createdAt
+      }
+      comments {
+        id
+        body
+        username
+        createdAt
+      }
+    }
+  }
+`;
