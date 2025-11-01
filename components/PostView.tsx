@@ -108,8 +108,8 @@ export default function PostView({ postId, onClose }: PostViewProps) {
   };
 
   if (loading) return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+    <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
+      <div className="bg-white rounded-lg shadow-2xl p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto relative" onClick={(e) => e.stopPropagation()}>
         <div className="text-center py-8 flex items-center justify-center">
           <LoaderCircle className="animate-spin h-6 w-6 text-blue-500" />
         </div>
@@ -118,8 +118,8 @@ export default function PostView({ postId, onClose }: PostViewProps) {
   );
 
   if (error) return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+    <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
+      <div className="bg-white rounded-lg shadow-2xl p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto relative" onClick={(e) => e.stopPropagation()}>
         <div className="text-center py-8 text-red-500">Error loading post: {error.message}</div>
       </div>
     </div>
@@ -128,8 +128,8 @@ export default function PostView({ postId, onClose }: PostViewProps) {
   const post: Post | null = data?.getPost || null;
 
   if (!post) return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+    <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
+      <div className="bg-white rounded-lg shadow-2xl p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto relative" onClick={(e) => e.stopPropagation()}>
         <div className="text-center py-8">Post not found</div>
       </div>
     </div>
