@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/client/react';
 import { GET_POSTS } from '../lib/graphql/queries';
 import PostView from './PostView';
 import { LoaderCircle } from 'lucide-react';
+import { timeAgo } from '../utils/timeAgo';
 
 interface Post {
   id: string;
@@ -98,7 +99,7 @@ export default function PostsFeed() {
             </div>
             <div>
               <h3 className="font-medium text-gray-900">{post.user?.username || post.username}</h3>
-              <p className="text-sm text-gray-500">{formatDate(post.createdAt)}</p>
+              <p className="text-sm text-gray-500">{timeAgo(post.createdAt)}</p>
             </div>
           </div>
           

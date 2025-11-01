@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { GET_POST, CREATE_COMMENT } from '../lib/graphql/queries';
 import { LoaderCircle } from 'lucide-react';
+import { timeAgo } from '../utils/timeAgo';
 
 interface PostViewProps {
   postId: string;
@@ -43,33 +44,36 @@ export default function PostView({ postId, onClose }: PostViewProps) {
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const formatDate = (dateString: string | Date | number) => {
-    if (!dateString) return 'invalid date';
-    
-    const date = typeof dateString === 'object' && dateString instanceof Date 
-      ? dateString 
-      : new Date(dateString);
-    
-    if (isNaN(date.getTime())) return 'invalid date';
+  const formatDate = (input: string | number | Date | null | undefined) => {
+    if (!input) return 'Invalid Date';
 
-    const now = new Date();
-    const diffInMs = now.getTime() - date.getTime();
-    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+    let date: Date;
+    if (input instanceof Date) {
+      date = input;
+    } else if (typeof input === 'number') {
+      // Detect seconds vs milliseconds
+      date = new Date(input < 1e12 ? input * 1000 : input);
+    } else if (typeof input === 'string') {
+      // If string is purely digits, treat as timestamp (ms or s)
+      if (/^\d+$/.test(input)) {
+        const num = Number(input);
+        date = new Date(num < 1e12 ? num * 1000 : num);
+      } else {
+        date = new Date(input);
+      }
+    } else {
+      return 'Invalid Date';
+    }
 
-    if (diffInMinutes < 1) return 'just now';
-    if (diffInMinutes < 60) return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+    if (isNaN(date.getTime())) return 'Invalid Date';
 
-    const hours = Math.floor(diffInMinutes / 60);
-    if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-
-    const days = Math.floor(hours / 24);
-    if (days < 30) return `${days} day${days > 1 ? 's' : ''} ago`;
-
-    const months = Math.floor(days / 30);
-    if (months < 12) return `${months} month${months > 1 ? 's' : ''} ago`;
-
-    const years = Math.floor(months / 12);
-    return `${years} year${years > 1 ? 's' : ''} ago`;
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   const { data, loading, error } = useQuery<GetPostData>(GET_POST, {
@@ -159,7 +163,7 @@ export default function PostView({ postId, onClose }: PostViewProps) {
             </div>
             <div>
               <h3 className="font-medium text-gray-900">{post.user?.username || post.username}</h3>
-              <p className="text-sm text-gray-500">{formatDate(post.createdAt)}</p>
+              <p className="text-sm text-gray-500">{timeAgo(post.createdAt)}</p>
             </div>
           </div>
           
@@ -188,7 +192,7 @@ export default function PostView({ postId, onClose }: PostViewProps) {
                 <div key={comment.id} className="bg-gray-50 rounded-lg p-3">
                   <div className="flex items-center space-x-2 mb-1">
                     <span className="font-medium text-sm">{comment.username}</span>
-                    <span className="text-xs text-gray-500">{formatDate(comment.createdAt)}</span>
+                    <span className="text-xs text-gray-500">{timeAgo(comment.createdAt)}</span>
                   </div>
                   <p className="text-sm text-gray-700">{comment.body}</p>
                 </div>

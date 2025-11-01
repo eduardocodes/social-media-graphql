@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useMutation } from '@apollo/client/react';
 import { LIKE_POST, CREATE_COMMENT, GET_POSTS } from '../lib/graphql/queries';
 import { useUser } from '@clerk/nextjs';
+import { timeAgo } from '../utils/timeAgo';
 
 interface Post {
   id: string;
@@ -100,7 +101,7 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
         <div className="ml-3">
           <p className="font-semibold text-gray-900">{post.username}</p>
-          <p className="text-sm text-gray-500">{formatDate(post.createdAt)}</p>
+          <p className="text-sm text-gray-500">{timeAgo(post.createdAt)}</p>
         </div>
       </div>
 
@@ -170,7 +171,7 @@ export default function PostCard({ post }: PostCardProps) {
                     <p className="font-semibold text-sm text-gray-900">{comment.username}</p>
                     <p className="text-sm text-gray-800">{comment.body}</p>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">{formatDate(comment.createdAt)}</p>
+                  <p className="text-xs text-gray-500 mt-1">{timeAgo(comment.createdAt)}</p>
                 </div>
               </div>
             ))}
