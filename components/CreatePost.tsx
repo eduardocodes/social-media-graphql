@@ -1,15 +1,34 @@
 'use client';
 
 import { useState } from 'react';
+import { useMutation } from '@apollo/client/react';
+import { CREATE_POST, GET_POSTS } from '../lib/graphql/queries';
 
 export default function CreatePost() {
   const [postBody, setPostBody] = useState('');
+  const [createPost, { loading, error }] = useMutation(CREATE_POST, {
+    refetchQueries: [{ query: GET_POSTS }],
+    onCompleted: () => {
+      setPostBody('');
+    },
+    onError: (error: any) => {
+      console.error('Error creating post:', error);
+    }
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Temporarily just clear the form
-    console.log('Post submitted:', postBody);
-    setPostBody('');
+    if (!postBody.trim()) return;
+
+    try {
+      await createPost({
+        variables: {
+          body: postBody.trim()
+        }
+      });
+    } catch (err) {
+      console.error('Failed to create post:', err);
+    }
   };
 
   return (
@@ -27,16 +46,23 @@ export default function CreatePost() {
             className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             rows={3}
             required
+            disabled={loading}
           />
         </div>
+        
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            Erro ao criar post: {error.message}
+          </div>
+        )}
         
         <div className="flex justify-end">
           <button
             type="submit"
-            disabled={!postBody.trim()}
+            disabled={!postBody.trim() || loading}
             className="px-6 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
           >
-            Postar!
+            {loading ? 'Postando...' : 'Postar!'}
           </button>
         </div>
       </form>
