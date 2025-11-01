@@ -36,14 +36,43 @@ export default function PostsFeed() {
 
   const posts: Post[] = data?.getPosts || [];
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+  const formatDate = (dateString: any) => {
+    if (!dateString) return 'data inválida';
+
+    // Handle numeric timestamps or Date objects gracefully
+    let date: Date;
+    if (dateString instanceof Date) {
+      date = dateString;
+    } else if (typeof dateString === 'number' || /^\d+$/.test(dateString)) {
+      date = new Date(parseInt(dateString as string, 10));
+    } else if (typeof dateString === 'string') {
+      // Replace potential trailing "Z" issues or use the raw string
+      date = new Date(dateString);
+    } else {
+      return 'data inválida';
+    }
+
+    if (isNaN(date.getTime())) return 'data inválida';
     
-    if (diffInHours < 1) return 'há poucos minutos';
-    if (diffInHours < 24) return `há ${diffInHours} horas`;
-    return `há ${Math.floor(diffInHours / 24)} dias`;
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+
+    const minutes = Math.floor(diffInSeconds / 60);
+    if (minutes < 1) return 'agora mesmo';
+    if (minutes < 60) return `há ${minutes} minuto${minutes > 1 ? 's' : ''}`;
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `há ${hours} hora${hours > 1 ? 's' : ''}`;
+
+    const days = Math.floor(hours / 24);
+    if (days < 30) return `há ${days} dia${days > 1 ? 's' : ''}`;
+
+    const months = Math.floor(days / 30);
+    if (months < 12) return `há ${months} mês${months > 1 ? 'es' : ''}`;
+
+    const years = Math.floor(months / 12);
+    return `há ${years} ano${years > 1 ? 's' : ''}`;
   };
 
   return (
