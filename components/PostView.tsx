@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { GET_POST, CREATE_COMMENT } from '../lib/graphql/queries';
+import { LoaderCircle } from 'lucide-react';
 
 interface PostViewProps {
   postId: string;
@@ -109,7 +110,9 @@ export default function PostView({ postId, onClose }: PostViewProps) {
   if (loading) return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-        <div className="text-center py-8">Loading post...</div>
+        <div className="text-center py-8 flex items-center justify-center">
+          <LoaderCircle className="animate-spin h-6 w-6 text-blue-500" />
+        </div>
       </div>
     </div>
   );

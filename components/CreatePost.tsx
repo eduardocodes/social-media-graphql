@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client/react';
 import { CREATE_POST, GET_POSTS } from '../lib/graphql/queries';
+import { LoaderCircle } from 'lucide-react';
 
 export default function CreatePost() {
   const [postBody, setPostBody] = useState('');
@@ -62,7 +63,13 @@ export default function CreatePost() {
             disabled={!postBody.trim() || loading}
             className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
           >
-            {loading ? 'Posting...' : 'Post!'}
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <LoaderCircle className="animate-spin h-5 w-5" />
+              </div>
+            ) : (
+              'Post!'
+            )}
           </button>
         </div>
       </form>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { GET_POSTS } from '../lib/graphql/queries';
 import PostView from './PostView';
+import { LoaderCircle } from 'lucide-react';
 
 interface Post {
   id: string;
@@ -34,7 +35,11 @@ export default function PostsFeed() {
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const { data, loading, error } = useQuery(GET_POSTS);
 
-  if (loading) return <div className="text-center py-4">Loading posts...</div>;
+  if (loading) return (
+    <div className="text-center py-4 flex items-center justify-center">
+      <LoaderCircle className="animate-spin h-6 w-6 text-blue-500" />
+    </div>
+  );
   if (error) return <div className="text-center py-4 text-red-500">Error loading posts: {error.message}</div>;
 
   const posts: Post[] = data?.getPosts || [];
