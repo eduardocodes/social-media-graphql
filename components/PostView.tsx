@@ -190,11 +190,20 @@ export default function PostView({ postId, onClose }: PostViewProps) {
             {post.comments && post.comments.length > 0 ? (
               post.comments.map((comment) => (
                 <div key={comment.id} className="bg-gray-50 rounded-lg p-3">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <span className="font-medium text-sm">{comment.username}</span>
-                    <span className="text-xs text-gray-500">{timeAgo(comment.createdAt)}</span>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-gray-600 text-xs font-medium">
+                        {comment.username.split(' ').map(n => n[0]).join('')}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2 mb-1">
+                        <span className="font-medium text-sm text-gray-900">{comment.username}</span>
+                        <span className="text-xs text-gray-500">{timeAgo(comment.createdAt)}</span>
+                      </div>
+                      <p className="text-sm text-gray-700">{comment.body}</p>
+                    </div>
                   </div>
-                  <p className="text-sm text-gray-700">{comment.body}</p>
                 </div>
               ))
             ) : (
