@@ -16,7 +16,7 @@ export default function Home() {
               </h1>
             </div>
             <p className="text-2xl text-gray-700 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Experience the future of social networking with our cutting-edge platform built on 
+              A modern social media platform showcasing full-stack development with
               <span className="font-semibold text-blue-600"> Next.js</span>, 
               <span className="font-semibold text-purple-600"> GraphQL</span>, and 
               <span className="font-semibold text-green-600"> MongoDB</span>
@@ -34,7 +34,7 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Real-time Updates</h3>
               <p className="text-gray-600 leading-relaxed">
-                Experience instant notifications and live updates as conversations happen. 
+                Experience instant live updates as conversations happen. 
                 Stay connected with real-time messaging and activity feeds.
               </p>
             </div>
@@ -62,7 +62,7 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Modern Stack</h3>
               <p className="text-gray-600 leading-relaxed">
-                Built with the latest technologies including Next.js 14, TypeScript, 
+                Built with the latest technologies including Next.js, TypeScript, 
                 and MongoDB for a robust and scalable experience.
               </p>
             </div>
@@ -73,14 +73,14 @@ export default function Home() {
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white shadow-2xl">
               <h2 className="text-3xl font-bold mb-4">Ready to Connect?</h2>
               <p className="text-xl opacity-90 mb-6">
-                Join thousands of users already sharing their stories and building connections.
+                Explore the interactive features and see modern web development in action.
               </p>
-              <div className="inline-flex items-center space-x-2 text-lg font-medium">
+              <button className="inline-flex items-center space-x-2 text-lg font-medium bg-white text-gray-800 px-6 py-3 rounded-lg hover:scale-105 hover:shadow-lg transition-all duration-200 cursor-pointer">
                 <span>Sign in to get started</span>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
-              </div>
+              </button>
             </div>
           </div>
         </SignedOut>
