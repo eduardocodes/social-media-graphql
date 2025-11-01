@@ -12,9 +12,7 @@ export default function Home() {
           <div className="text-center mb-16">
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               <h1 className="text-6xl font-extrabold mb-6 leading-tight">
-                Social Media
-                <br />
-                <span className="text-5xl">GraphQL</span>
+                Social Media GraphQL
               </h1>
             </div>
             <p className="text-2xl text-gray-700 mb-12 max-w-3xl mx-auto leading-relaxed">
