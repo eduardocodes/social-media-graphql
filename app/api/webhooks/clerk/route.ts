@@ -61,10 +61,18 @@ export async function POST(req: Request) {
     if (eventType === 'user.created') {
       const { id, email_addresses, username, first_name, last_name } = evt.data;
       
+      // Debug logging to see what fields are available
+      console.log('Webhook data fields:', { id, username, first_name, last_name, email: email_addresses[0]?.email_address });
+      
+      // Use the username field directly if it exists, otherwise fall back to email prefix
+      const finalUsername = username || email_addresses[0]?.email_address.split('@')[0];
+      
+      console.log('Final username to be used:', finalUsername);
+      
       // Create user in MongoDB
       const newUser = new User({
         clerkId: id,
-        username: username || `${first_name || ''}${last_name || ''}`.trim() || email_addresses[0]?.email_address.split('@')[0],
+        username: finalUsername,
         email: email_addresses[0]?.email_address,
       });
 
@@ -75,11 +83,19 @@ export async function POST(req: Request) {
     if (eventType === 'user.updated') {
       const { id, email_addresses, username, first_name, last_name } = evt.data;
       
+      // Debug logging to see what fields are available
+      console.log('Webhook update data fields:', { id, username, first_name, last_name, email: email_addresses[0]?.email_address });
+      
+      // Use the username field directly if it exists, otherwise fall back to email prefix
+      const finalUsername = username || email_addresses[0]?.email_address.split('@')[0];
+      
+      console.log('Final username to be used for update:', finalUsername);
+      
       // Update user in MongoDB
       const updatedUser = await User.findOneAndUpdate(
         { clerkId: id },
         {
-          username: username || `${first_name || ''}${last_name || ''}`.trim() || email_addresses[0]?.email_address.split('@')[0],
+          username: finalUsername,
           email: email_addresses[0]?.email_address,
         },
         { new: true }
