@@ -1,161 +1,87 @@
 'use client';
 
-import { useState } from 'react';
+import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs';
 
 export default function Home() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: ''
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
-  };
+  const { user } = useUser();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Navigation Header */}
-      <nav className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="max-w-4xl mx-auto flex justify-center items-center">
-          <div className="flex space-x-6">
-            <button
-              onClick={() => setIsLogin(true)}
-              className={`font-medium cursor-pointer ${
-                isLogin 
-                  ? 'text-blue-600 border-b-2 border-blue-600 pb-1' 
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Login
-            </button>
-            <button
-              onClick={() => setIsLogin(false)}
-              className={`font-medium cursor-pointer ${
-                !isLogin 
-                  ? 'text-blue-600 border-b-2 border-blue-600 pb-1' 
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Register
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="max-w-md w-full">
-          {/* Form Container */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-            <div className="text-center mb-8">
-              <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-                {isLogin ? 'Login' : 'Register'}
-              </h1>
-              <p className="text-gray-600">
-                {isLogin 
-                  ? 'Welcome back! Please sign in to your account.' 
-                  : 'Create a new account to get started.'
-                }
+    <div className="min-h-screen bg-gray-50">
+      <main className="max-w-4xl mx-auto px-6 py-12">
+        <SignedOut>
+          {/* Content for signed-out users */}
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-6">
+              Welcome to Social Media GraphQL
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              A modern social media platform built with Next.js, GraphQL, Apollo Client, and MongoDB. 
+              Connect with friends, share your thoughts, and explore real-time conversations.
+            </p>
+            <div className="bg-white rounded-lg shadow-lg p-8 max-w-md mx-auto">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+                Get Started
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Sign in to start connecting with others and sharing your experiences.
               </p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Username Field */}
-              <div>
-                <label 
-                  htmlFor="username" 
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Username
-                </label>
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter your username"
-                  required
-                />
-              </div>
-
-              {/* Email Field - Show for both login and register to match wireframe */}
-              <div>
-                <label 
-                  htmlFor="email" 
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-
-              {/* Password Field */}
-              <div>
-                <label 
-                  htmlFor="password" 
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter your password"
-                  required
-                />
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium transition-colors cursor-pointer"
-              >
-                {isLogin ? 'Sign In' : 'Create Account'}
-              </button>
-            </form>
-
-            {/* Toggle Link */}
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
-                {isLogin ? "Don't have an account? " : "Already have an account? "}
-                <button
-                  onClick={() => setIsLogin(!isLogin)}
-                  className="text-blue-600 hover:text-blue-700 font-medium cursor-pointer"
-                >
-                  {isLogin ? 'Sign up' : 'Sign in'}
+              <SignInButton mode="modal">
+                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors">
+                  Sign In to Continue
                 </button>
+              </SignInButton>
+            </div>
+          </div>
+        </SignedOut>
+
+        <SignedIn>
+          {/* Content for signed-in users */}
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Welcome back, {user?.firstName || 'there'}! 👋
+            </h1>
+            <p className="text-xl text-gray-600 mb-8">
+              You're successfully authenticated with Clerk. Ready to build something amazing?
+            </p>
+            
+            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  🚀 Next Steps
+                </h3>
+                <ul className="text-left text-gray-600 space-y-2">
+                  <li>• Set up GraphQL API endpoints</li>
+                  <li>• Configure Apollo Client</li>
+                  <li>• Design your data models</li>
+                  <li>• Build real-time subscriptions</li>
+                </ul>
+              </div>
+              
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  🔐 Authentication Ready
+                </h3>
+                <ul className="text-left text-gray-600 space-y-2">
+                  <li>• User authentication ✅</li>
+                  <li>• Protected routes ✅</li>
+                  <li>• User management ✅</li>
+                  <li>• Session handling ✅</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-blue-900 mb-2">
+                🎉 Clerk Integration Complete!
+              </h3>
+              <p className="text-blue-700">
+                Your social media platform now has secure authentication powered by Clerk. 
+                Users can sign in, manage their profiles, and access protected features seamlessly.
               </p>
             </div>
           </div>
-        </div>
-      </div>
+        </SignedIn>
+      </main>
     </div>
   );
 }
