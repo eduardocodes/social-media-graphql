@@ -100,13 +100,13 @@ export default function PostsFeed() {
           <p className="text-gray-800 mb-4">{post.body}</p>
           
           <div className="flex items-center space-x-6 text-sm text-gray-500">
-            <button className="flex items-center space-x-1 hover:text-red-500">
+            <button className="flex items-center space-x-1 text-gray-600 hover:text-red-500 transition-colors cursor-pointer">
               <span>❤️</span>
-              <span>{post.likeCount} likes</span>
+              <span className="text-sm">{post.likeCount}</span>
             </button>
-            <button className="flex items-center space-x-1 hover:text-blue-500">
+            <button className="flex items-center space-x-1 text-gray-600 hover:text-blue-500 transition-colors cursor-pointer">
               <span>💬</span>
-              <span>{post.commentCount} Comments</span>
+              <span className="text-sm">{post.commentCount}</span>
             </button>
           </div>
         </div>
