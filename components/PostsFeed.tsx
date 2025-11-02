@@ -89,6 +89,26 @@ export default function PostsFeed() {
 
   const posts: Post[] = data?.getPosts || [];
 
+  // Helper function to determine heart state based on like count and user's like status
+  const getHeartState = (post: Post, isLiked: boolean) => {
+    if (post.likeCount === 0) {
+      return { 
+        icon: '🤍', 
+        colorClass: 'text-gray-400 hover:text-red-500' 
+      }; // White heart for no likes
+    } else if (isLiked) {
+      return { 
+        icon: '❤️', 
+        colorClass: 'text-red-600 hover:text-red-700' 
+      }; // Red heart for user's like
+    } else {
+      return { 
+        icon: '🩶', 
+        colorClass: 'text-gray-500 hover:text-red-500' 
+      }; // Gray heart for others' likes
+    }
+  };
+
   return (
     <>
       {posts.map((post) => {
@@ -102,8 +122,10 @@ export default function PostsFeed() {
         console.log('Debug - Post likes:', post.likes);
         console.log('Debug - Post likes usernames:', post.likes.map(like => like.username));
         
-        const isLiked = dbUsername && post.likes.some(like => like.username === dbUsername);
+        const isLiked = Boolean(dbUsername && post.likes.some(like => like.username === dbUsername));
         console.log('Debug - isLiked result:', isLiked);
+        
+        const heartState = getHeartState(post, isLiked);
         
         return (
           <div 
@@ -132,12 +154,10 @@ export default function PostsFeed() {
             <div className="flex items-center space-x-6 text-sm text-gray-500 flex-shrink-0">
               <button
                 onClick={(e) => handleLike(e, post.id)}
-                className={`flex items-center space-x-1 transition-colors cursor-pointer ${
-                  isLiked ? 'text-red-600 hover:text-red-700' : 'text-gray-600 hover:text-red-500'
-                }`}
+                className={`flex items-center space-x-1 transition-colors cursor-pointer ${heartState.colorClass}`}
                 disabled={!user}
               >
-                <span>{isLiked ? '❤️' : '🤍'}</span>
+                <span>{heartState.icon}</span>
                 <span className="text-sm">{post.likeCount}</span>
               </button>
               <button className="flex items-center space-x-1 text-gray-600 hover:text-blue-500 transition-colors cursor-pointer">
