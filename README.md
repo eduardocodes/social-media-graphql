@@ -63,7 +63,6 @@ $ npm run dev
 
 ## ⚙️ System Design
 
-### 🏗️ System Architecture
 ![System Design](./public/System%20Design.jpg)
 
 ---
