@@ -90,6 +90,7 @@ export default function PostView({ postId, onClose }: PostViewProps) {
   const { data, loading, error } = useQuery<GetPostData>(GET_POST, {
     variables: { postId },
     skip: !postId,
+    fetchPolicy: 'cache-and-network',
   });
 
   const [createComment] = useMutation(CREATE_COMMENT, {

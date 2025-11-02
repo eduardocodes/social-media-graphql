@@ -9,6 +9,25 @@ interface Context {
   req: any;
 }
 
+// Helper function to sort comments by createdAt in ascending order (oldest first)
+const sortPostComments = (post: any) => {
+  if (post?.comments && post.comments.length > 0) {
+    const parseTs = (value: any): number => {
+      if (!value) return 0;
+      try {
+        const date = value instanceof Date ? value : new Date(value);
+        const ts = date.getTime();
+        return isNaN(ts) ? 0 : ts;
+      } catch {
+        return 0;
+      }
+    };
+
+    post.comments.sort((a: any, b: any) => parseTs(a?.createdAt) - parseTs(b?.createdAt));
+  }
+  return post;
+};
+
 export const resolvers = {
   Query: {
     async getPosts() {
@@ -17,6 +36,10 @@ export const resolvers = {
         const posts = await Post.find()
           .sort({ createdAt: -1 })
           .populate('user');
+        
+        // Sort comments for each post using helper function
+        posts.forEach(post => sortPostComments(post));
+        
         return posts;
       } catch (err) {
         throw new Error('Error fetching posts');
@@ -30,7 +53,9 @@ export const resolvers = {
         if (!post) {
           throw new Error('Post not found');
         }
-        return post;
+        
+        // Sort comments using helper function
+        return sortPostComments(post);
       } catch (err) {
         throw new Error('Error fetching post');
       }
@@ -239,7 +264,8 @@ export const resolvers = {
           commentAdded: updatedPost
         });
         
-        return updatedPost;
+        // Sort comments and return the updated post
+        return sortPostComments(updatedPost);
       } catch (err: any) {
         throw new Error(err.message || 'Error creating comment');
       }
@@ -282,7 +308,10 @@ export const resolvers = {
 
         post.comments.splice(commentIndex, 1);
         await post.save();
-        return await Post.findById(postId).populate('user');
+        const updatedPost = await Post.findById(postId).populate('user');
+        
+        // Sort comments and return the updated post
+        return sortPostComments(updatedPost);
       } catch (err: any) {
         throw new Error(err.message || 'Error deleting comment');
       }
@@ -333,7 +362,8 @@ export const resolvers = {
           postLiked: updatedPost
         });
         
-        return updatedPost;
+        // Sort comments and return the updated post
+        return sortPostComments(updatedPost);
       } catch (err: any) {
         throw new Error(err.message || 'Error liking post');
       }

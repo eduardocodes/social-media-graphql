@@ -50,7 +50,9 @@ interface GetUserByClerkIdData {
 export default function PostsFeed() {
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const { user } = useUser();
-  const { data, loading, error } = useQuery<GetPostsData>(GET_POSTS);
+  const { data, loading, error } = useQuery<GetPostsData>(GET_POSTS, {
+    fetchPolicy: 'cache-and-network',
+  });
   
   // Get the database user to ensure we have the correct username
   const { data: dbUserData } = useQuery<GetUserByClerkIdData>(GET_USER_BY_CLERK_ID, {

@@ -15,7 +15,25 @@ const authLink = setContext((_, { headers }) => {
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Post: {
+        fields: {
+          comments: {
+            merge(existing, incoming) {
+              // Preserve server-provided order for comments
+              return incoming;
+            },
+          },
+          likes: {
+            merge(existing, incoming) {
+              return incoming;
+            },
+          },
+        },
+      },
+    },
+  }),
   defaultOptions: {
     watchQuery: {
       errorPolicy: 'all',
