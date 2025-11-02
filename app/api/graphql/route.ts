@@ -15,4 +15,13 @@ const handler = startServerAndCreateNextHandler(server, {
   context: async (req: NextRequest) => ({ req }),
 });
 
-export { handler as GET, handler as POST };
+// Wrap the handler to match App Router signature
+async function GET(request: NextRequest, context: { params: Promise<{}> }) {
+  return handler(request);
+}
+
+async function POST(request: NextRequest, context: { params: Promise<{}> }) {
+  return handler(request);
+}
+
+export { GET, POST };
