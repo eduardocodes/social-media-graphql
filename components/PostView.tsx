@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client/react';
-import { GET_POST, CREATE_COMMENT } from '../lib/graphql/queries';
+import { GET_POST, CREATE_COMMENT, LIKE_POST } from '../lib/graphql/queries';
 import { LoaderCircle } from 'lucide-react';
 import { timeAgo } from '../utils/timeAgo';
+import { useUser } from '@clerk/nextjs';
 
 interface PostViewProps {
   postId: string;
@@ -93,6 +94,24 @@ export default function PostView({ postId, onClose }: PostViewProps) {
     },
   });
 
+  // Like functionality hooks
+  const { user } = useUser();
+  const [likePost] = useMutation(LIKE_POST, {
+    refetchQueries: [{ query: GET_POST, variables: { postId } }],
+    onError: (error) => {
+      console.error('Error liking post:', error);
+    },
+  });
+
+  const handleLike = async () => {
+    if (!user) return;
+    try {
+      await likePost({ variables: { postId } });
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
+  };
+
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim() || isSubmitting) return;
@@ -130,6 +149,7 @@ export default function PostView({ postId, onClose }: PostViewProps) {
   );
 
   const post: Post | null = data?.getPost || null;
+  const isLiked = post?.likes?.some((like) => like.username === user?.username);
 
   if (!post) return (
     <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
@@ -170,10 +190,16 @@ export default function PostView({ postId, onClose }: PostViewProps) {
           <p className="text-gray-800 mb-4">{post.body}</p>
           
           <div className="flex items-center space-x-6 text-sm text-gray-500">
-            <span className="flex items-center space-x-1">
-              <span>❤️</span>
+            <button
+              onClick={handleLike}
+              disabled={!user}
+              className={`flex items-center space-x-1 text-sm font-medium transition-colors cursor-pointer ${
+                isLiked ? 'text-red-600 hover:text-red-700' : 'text-gray-600 hover:text-red-500'
+              }`}
+            >
+              <span className="text-lg">{isLiked ? '❤️' : '🤍'}</span>
               <span>{post.likeCount} likes</span>
-            </span>
+            </button>
             <span className="flex items-center space-x-1">
               <span>💬</span>
               <span>{post.commentCount} Comments</span>
@@ -233,3 +259,5 @@ export default function PostView({ postId, onClose }: PostViewProps) {
     </div>
   );
 }
+
+// remove duplicate misplaced hooks at bottom
