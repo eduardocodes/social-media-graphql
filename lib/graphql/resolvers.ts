@@ -140,6 +140,21 @@ export const resolvers = {
         
         return populatedPost;
       } catch (err: any) {
+        // Handle Mongoose validation errors
+        if (err.name === 'ValidationError') {
+          if (err.errors?.body?.kind === 'maxlength') {
+            throw new Error('Post must be 1000 characters or less.');
+          }
+          if (err.errors?.body?.kind === 'required') {
+            throw new Error('Post content is required.');
+          }
+        }
+        
+        // Handle other validation errors that might contain maxlength
+        if (err.message && (err.message.includes('maxlength') || err.message.includes('longer than the maximum allowed length'))) {
+          throw new Error('Post must be 1000 characters or less.');
+        }
+        
         throw new Error(err.message || 'Error creating post');
       }
     },

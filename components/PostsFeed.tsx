@@ -54,10 +54,10 @@ export default function PostsFeed() {
       {posts.map((post) => (
         <div 
           key={post.id} 
-          className="bg-white rounded-lg border border-gray-200 p-4 h-fit cursor-pointer hover:shadow-md transition-shadow"
+          className="bg-white rounded-lg border border-gray-200 p-4 h-64 w-full cursor-pointer hover:shadow-md transition-shadow flex flex-col"
           onClick={() => setSelectedPostId(post.id)}
         >
-          <div className="flex items-center space-x-3 mb-3">
+          <div className="flex items-center space-x-3 mb-3 flex-shrink-0">
             <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
               <span className="text-gray-600 text-sm font-medium">
                 {post.user?.username ? post.user.username.split(' ').map(n => n[0]).join('') : post.username.split(' ').map(n => n[0]).join('')}
@@ -69,9 +69,13 @@ export default function PostsFeed() {
             </div>
           </div>
           
-          <p className="text-gray-800 mb-4">{post.body}</p>
+          <div className="flex-1 mb-4 overflow-hidden">
+            <p className="text-gray-800 line-clamp-4 text-sm leading-relaxed">
+              {post.body}
+            </p>
+          </div>
           
-          <div className="flex items-center space-x-6 text-sm text-gray-500">
+          <div className="flex items-center space-x-6 text-sm text-gray-500 flex-shrink-0">
             <button
               className={`flex items-center space-x-1 transition-colors cursor-pointer ${
                 post.likeCount > 0 ? 'text-red-600 hover:text-red-700' : 'text-gray-600 hover:text-red-500'
