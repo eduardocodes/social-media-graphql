@@ -34,9 +34,4 @@ const UserSchema: Schema = new Schema({
   }
 });
 
-// Create indexes for better performance
-UserSchema.index({ clerkId: 1 });
-UserSchema.index({ username: 1 });
-UserSchema.index({ email: 1 });
-
 export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
