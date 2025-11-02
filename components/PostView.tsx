@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client/react';
-import { GET_POST, CREATE_COMMENT, LIKE_POST } from '../lib/graphql/queries';
+import { GET_POST, CREATE_COMMENT, LIKE_POST, GET_USER_BY_CLERK_ID } from '../lib/graphql/queries';
 import { LoaderCircle } from 'lucide-react';
 import { timeAgo } from '../utils/timeAgo';
 import { useUser } from '@clerk/nextjs';
@@ -39,6 +39,16 @@ interface Post {
 
 interface GetPostData {
   getPost: Post;
+}
+
+interface GetUserByClerkIdData {
+  getUserByClerkId: {
+    id: string;
+    clerkId: string;
+    username: string;
+    email: string;
+    createdAt: string;
+  };
 }
 
 export default function PostView({ postId, onClose }: PostViewProps) {
@@ -96,6 +106,13 @@ export default function PostView({ postId, onClose }: PostViewProps) {
 
   // Like functionality hooks
   const { user } = useUser();
+  
+  // Get the database user to ensure we have the correct username
+  const { data: dbUserData } = useQuery<GetUserByClerkIdData>(GET_USER_BY_CLERK_ID, {
+    variables: { clerkId: user?.id },
+    skip: !user?.id
+  });
+  
   const [likePost] = useMutation(LIKE_POST, {
     refetchQueries: [{ query: GET_POST, variables: { postId } }],
     onError: (error) => {
@@ -149,7 +166,19 @@ export default function PostView({ postId, onClose }: PostViewProps) {
   );
 
   const post: Post | null = data?.getPost || null;
-  const isLiked = post?.likes?.some((like) => like.username === user?.username);
+  
+  // Get the database username for accurate comparison
+  const dbUsername = dbUserData?.getUserByClerkId?.username;
+  
+  // Debug logging for PostView
+  console.log('PostView Debug - User object:', user);
+  console.log('PostView Debug - Clerk username:', user?.username);
+  console.log('PostView Debug - Database username:', dbUsername);
+  console.log('PostView Debug - Post likes:', post?.likes);
+  console.log('PostView Debug - Post likes usernames:', post?.likes?.map(like => like.username));
+  
+  const isLiked = post?.likes?.some((like) => like.username === dbUsername);
+  console.log('PostView Debug - isLiked result:', isLiked);
 
   if (!post) return (
     <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>

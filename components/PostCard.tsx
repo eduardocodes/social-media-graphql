@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useMutation } from '@apollo/client/react';
-import { LIKE_POST, CREATE_COMMENT, GET_POSTS } from '../lib/graphql/queries';
+import { useMutation, useQuery } from '@apollo/client/react';
+import { LIKE_POST, CREATE_COMMENT, GET_POSTS, GET_USER_BY_CLERK_ID } from '../lib/graphql/queries';
 import { useUser } from '@clerk/nextjs';
 import { timeAgo } from '../utils/timeAgo';
 
@@ -29,10 +29,26 @@ interface PostCardProps {
   post: Post;
 }
 
+interface GetUserByClerkIdData {
+  getUserByClerkId: {
+    id: string;
+    clerkId: string;
+    username: string;
+    email: string;
+    createdAt: string;
+  };
+}
+
 export default function PostCard({ post }: PostCardProps) {
   const { user } = useUser();
   const [showComments, setShowComments] = useState(false);
   const [commentBody, setCommentBody] = useState('');
+  
+  // Get the database user to ensure we have the correct username
+  const { data: dbUserData } = useQuery<GetUserByClerkIdData>(GET_USER_BY_CLERK_ID, {
+    variables: { clerkId: user?.id },
+    skip: !user?.id
+  });
   
   const [likePost] = useMutation(LIKE_POST, {
     refetchQueries: [{ query: GET_POSTS }],
@@ -90,7 +106,18 @@ export default function PostCard({ post }: PostCardProps) {
     });
   };
 
-  const isLiked = user && post.likes.some(like => like.username === user.username);
+  // Get the database username for accurate comparison
+  const dbUsername = dbUserData?.getUserByClerkId?.username;
+  
+  // Debug logging for PostCard
+  console.log('PostCard Debug - User object:', user);
+  console.log('PostCard Debug - Clerk username:', user?.username);
+  console.log('PostCard Debug - Database username:', dbUsername);
+  console.log('PostCard Debug - Post likes:', post.likes);
+  console.log('PostCard Debug - Post likes usernames:', post.likes?.map(like => like.username));
+
+  const isLiked = dbUsername && post.likes.some(like => like.username === dbUsername);
+  console.log('PostCard Debug - isLiked result:', isLiked);
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">

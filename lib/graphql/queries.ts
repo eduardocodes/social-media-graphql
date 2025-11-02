@@ -105,6 +105,18 @@ export const CREATE_COMMENT = gql`
   }
 `;
 
+export const GET_USER_BY_CLERK_ID = gql`
+  query GetUserByClerkId($clerkId: String!) {
+    getUserByClerkId(clerkId: $clerkId) {
+      id
+      clerkId
+      username
+      email
+      createdAt
+    }
+  }
+`;
+
 export const NEW_POST_SUBSCRIPTION = gql`
   subscription NewPost {
     newPost {
